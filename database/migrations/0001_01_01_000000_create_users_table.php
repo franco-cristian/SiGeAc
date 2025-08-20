@@ -17,6 +17,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- CAMPOS AÑADIDOS ---
+            $table->string('phone')->nullable();
+            $table->string('professional_url')->nullable();
+            $table->string('photo_path')->nullable();
+            $table->string('dni')->unique()->nullable();
+            $table->boolean('is_admin')->default(false); // Campo simple para el rol docente/admin del TP original
+            // -----------------------
+
             $table->rememberToken();
             $table->timestamps();
         });
