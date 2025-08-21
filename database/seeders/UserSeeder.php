@@ -41,13 +41,13 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($teachers as $teacher) {
-            
+
             // --- LÓGICA DE EMAIL ---
             // 1. Limpiamos el nombre: "Ortiz, Noemí" -> "Ortiz Noemi"
             $cleanedName = str_replace(',', '', $teacher['name']);
             // 2. Usamos Str::slug para convertirlo a un formato limpio: "Ortiz Noemi" -> "ortiz.noemi"
             $emailSlug = Str::slug($cleanedName, '.');
-            
+
             $email = $emailSlug . '@sga.com';
             // -----------------------------------
 
@@ -61,8 +61,10 @@ class UserSeeder extends Seeder
         }
 
         // 3. Crear algunos Alumnos de prueba
-        User::factory()->count(50)->create()->each(function ($user) {
-            $user->assignRole('Alumno');
-        });
+        User::factory()->count(50)
+            ->create(['email_verified_at' => now()]) // <-- AÑADE ESTA LÍNEA
+            ->each(function ($user) {
+                $user->assignRole('Alumno');
+            });
     }
 }
