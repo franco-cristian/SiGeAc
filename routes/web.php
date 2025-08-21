@@ -27,16 +27,14 @@ Route::middleware(['auth', 'role:SuperAdmin'])->name('admin.')->prefix('admin')-
 // Rutas del Docente
 Route::middleware(['auth', 'role:Docente'])->name('docente.')->prefix('docente')->group(function () {
     Route::get('/dashboard', function () {
-        // Vista pendiente
-        return "Dashboard del Docente";
+        return view('docente.dashboard');
     })->name('dashboard');
 });
 
 // Rutas del Alumno
 Route::middleware(['auth', 'role:Alumno'])->name('student.')->prefix('student')->group(function () {
     Route::get('/dashboard', function () {
-        // Vista pendiente
-        return "Dashboard del Alumno";
+        return view('student.dashboard');
     })->name('dashboard');
 });
 
