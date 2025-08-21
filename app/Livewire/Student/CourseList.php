@@ -4,6 +4,7 @@ namespace App\Livewire\Student;
 
 use App\Models\Course;
 use App\Models\Subject;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
@@ -13,13 +14,35 @@ class CourseList extends Component
 {
     use WithPagination;
 
-    // Propiedades para los filtros
     public string $search = '';
     public string $subjectFilter = '';
 
-    // Resetea la paginación cuando se aplica un filtro
     public function updatingSearch() { $this->resetPage(); }
     public function updatingSubjectFilter() { $this->resetPage(); }
+
+    public function enroll(Course $course)
+    {
+        $user = Auth::user();
+
+        // 1. Verificar si ya está inscrito
+        if ($user->coursesAsStudent()->where('course_id', $course->id)->exists()) {
+            $this->dispatch('show-toast', ['message' => 'Ya estás inscrito en este curso.']);
+            return;
+        }
+
+        // 2. Verificar cupos
+        $enrolledCount = $course->students()->where('status', 'cursando')->count();
+        
+        if ($enrolledCount >= $course->capacity) {
+            // No hay cupos, lo añadimos a la lista de espera
+            $user->coursesAsStudent()->attach($course->id, ['status' => 'lista_de_espera']);
+            $this->dispatch('show-toast', ['message' => 'Curso completo. Has sido añadido a la lista de espera.']);
+        } else {
+            // Hay cupos, lo inscribimos
+            $user->coursesAsStudent()->attach($course->id, ['status' => 'cursando']);
+            $this->dispatch('show-toast', ['message' => "¡Inscripción exitosa a {$course->subject->name}!"]);
+        }
+    }
 
     public function render()
     {

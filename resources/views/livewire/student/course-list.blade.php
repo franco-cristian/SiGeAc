@@ -32,6 +32,12 @@
 
                     <!-- Grid de Cursos -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @php
+                            // Obtenemos los IDs de los cursos en los que el alumno ya está inscrito
+                            // Lo hacemos una vez fuera del bucle para optimizar
+                            $enrolledCourseIds = auth()->user()->coursesAsStudent()->pluck('course_id')->toArray();
+                        @endphp
+
                         @forelse ($courses as $course)
                             <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg shadow-md flex flex-col justify-between hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
                                 <div>
@@ -44,12 +50,23 @@
                                         <span class="font-semibold">Período:</span> {{ $course->term }}
                                     </p>
                                 </div>
-                                <div class="mt-6">
-                                    {{-- botón de inscripción en la Fase 7 --}}
+                                <div class="mt-6 space-y-4">
                                     <div class="flex justify-between items-center text-sm text-neutral-text dark:text-dark-neutral-text">
                                         <span><span class="font-bold">{{ $course->capacity }}</span> Cupos</span>
-                                        {{-- lógica de disponibilidad --}}
+                                        {{-- Lógica de disponibilidad aquí --}}
                                         <span class="font-bold text-accent-success dark:text-dark-accent-success">Disponible</span>
+                                    </div>
+                                    
+                                    <div>
+                                        @if(in_array($course->id, $enrolledCourseIds))
+                                            <button disabled class="w-full text-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-400 dark:bg-gray-600 cursor-not-allowed">
+                                                Inscripto
+                                            </button>
+                                        @else
+                                            <x-primary-button wire:click="enroll({{ $course->id }})" wire:loading.attr="disabled" class="w-full justify-center">
+                                                Inscribirme
+                                            </x-primary-button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

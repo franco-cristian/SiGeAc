@@ -11,7 +11,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @mixin \Spatie\Permission\Traits\HasRoles 
+ * @mixin \Spatie\Permission\Traits\HasRoles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $coursesAsStudent
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -30,7 +31,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'professional_url',
         'photo_path',
         'dni',
-        'is_admin',
     ];
 
     /**
