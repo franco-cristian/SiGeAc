@@ -13,6 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @mixin \Spatie\Permission\Traits\HasRoles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $coursesAsStudent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $coursesAsTeacher
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
