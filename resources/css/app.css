@@ -21,3 +21,23 @@ body {
 .animate-float-complex {
     animation: float-complex 10s ease-in-out infinite;
 }
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.pagination nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.pagination nav > div:first-child {
+    display: none; /* Oculta el "Mostrando 1 a 10..." en pantallas pequeñas */
+}
+@media (min-width: 640px) {
+    .pagination nav > div:first-child {
+        display: block; /* Vuelve a mostrarlo en pantallas más grandes */
+    }
+}

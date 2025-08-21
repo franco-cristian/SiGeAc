@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@sga.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'), //Cambiar en producción
+            'password' => Hash::make('password'),
         ]);
         $superAdmin->assignRole('SuperAdmin');
 
@@ -41,15 +41,15 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($teachers as $teacher) {
-            // Genera un email a partir del nombre, ej: "Britez, Horacio" -> "britez.h@sga.com"
-            $email = str_replace(
-                [' ', ','], 
-                ['', '.'], 
-                strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $teacher['name']))
-            ) . '@sga.com';
             
-            // Corrige la inicial del segundo nombre si existe
-            $email = preg_replace('/\.(\w)\./', '.\1', $email);
+            // --- LÓGICA DE EMAIL ---
+            // 1. Limpiamos el nombre: "Ortiz, Noemí" -> "Ortiz Noemi"
+            $cleanedName = str_replace(',', '', $teacher['name']);
+            // 2. Usamos Str::slug para convertirlo a un formato limpio: "Ortiz Noemi" -> "ortiz.noemi"
+            $emailSlug = Str::slug($cleanedName, '.');
+            
+            $email = $emailSlug . '@sga.com';
+            // -----------------------------------
 
             $user = User::create([
                 'name' => $teacher['name'],
@@ -60,7 +60,7 @@ class UserSeeder extends Seeder
             $user->assignRole('Docente');
         }
 
-        // 3. Crear Alumnos de prueba
+        // 3. Crear algunos Alumnos de prueba
         User::factory()->count(50)->create()->each(function ($user) {
             $user->assignRole('Alumno');
         });
