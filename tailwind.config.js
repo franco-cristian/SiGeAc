@@ -25,9 +25,10 @@ export default {
                 neutral: {
                     background: '#F9FAFB',
                     card: '#FFFFFF',
+                    'card-transparent': 'rgba(255, 255, 255, 0.7)',
                     text: '#64748B',
                 },
-                
+
                 // Modo Dark (los nombres son los mismos para facilidad de uso)
                 'dark-primary': '#60A5FA',
                 'dark-secondary': '#F1F5F9',
