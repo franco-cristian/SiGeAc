@@ -16,24 +16,22 @@ class UserList extends Component
 
     public string $search = '';
     public string $role = '';
+    public bool $confirmingUserDeletion = false; // Controla el renderizado del modal
     public ?User $userToDelete = null;
-
-    public bool $confirmingUserDeletion = false;
 
     public function updatingSearch() { $this->resetPage(); }
     public function updatingRole() { $this->resetPage(); }
 
     public function confirmDelete(int $userId)
     {
-        // Buscamos al usuario explícitamente. findOrFail lanzará un error si no lo encuentra.
         $this->userToDelete = User::findOrFail($userId);
-        $this->confirmingUserDeletion = true;
+        $this->confirmingUserDeletion = true; // Renderiza el modal
     }
-    
+
     public function cancelDelete()
     {
-        $this->confirmingUserDeletion = false;
         $this->userToDelete = null;
+        $this->confirmingUserDeletion = false; // Remueve el modal del DOM
     }
 
     public function delete()
@@ -46,8 +44,8 @@ class UserList extends Component
 
             $userName = $this->userToDelete->name;
             $this->userToDelete->delete();
-            
-            $this->cancelDelete();
+            $this->userToDelete = null;
+            $this->confirmingUserDeletion = false; // Cierra después de eliminar
             
             $this->dispatch('show-toast', ['message' => "Usuario '{$userName}' eliminado con éxito."]);
         }
