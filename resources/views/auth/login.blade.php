@@ -141,7 +141,7 @@
                 }
                 const isDarkMode = document.documentElement.classList.contains('dark');
                 particlesJS('particles-js', {
-                    "particles": { "number": { "value": 120, "density": { "enable": true, "value_area": 800 } }, "color": { "value": isDarkMode ? "#ffffff" : "#0F172A" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 200, "color": isDarkMode ? "#ffffff" : "#0F172A", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 5, "direction": "none", "straight": false } },
+                    "particles": { "number": { "value": 120, "density": { "enable": true, "value_area": 800 } }, "color": { "value": isDarkMode ? "#ffffff" : "#0F172A" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 200, "color": isDarkMode ? "#ffffff" : "#0F172A", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 4, "direction": "none", "straight": false } },
                     "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "grab": { "distance": 180, "line_linked": { "opacity": 0.5 } }, "push": { "particles_nb": 4 } } }
                 });
             };
