@@ -40,7 +40,7 @@
                         <input 
                             wire:model.live.debounce.300ms="search" 
                             type="text" 
-                            placeholder="Buscar por curso, materia o docente..."
+                            placeholder="Buscar por curso, materia, comisión o docente..."
                             class="md:col-span-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm w-full"
                         >
                         <select wire:model.live="subjectFilter" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm w-full">
@@ -97,7 +97,7 @@
                                     <div>
                                         @if($isEnrolled)
                                             <x-danger-button wire:click="withdraw({{ $course->id }})" class="w-full justify-center" :disabled="!$isEnrollmentPeriodActive">
-                                                Darse de Baja
+                                                Darme de Baja
                                             </x-danger-button>
                                         @else
                                             <x-primary-button wire:click="enroll({{ $course->id }})" wire:loading.attr="disabled" class="w-full justify-center" :disabled="!$canEnroll">

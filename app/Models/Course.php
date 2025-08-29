@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -63,7 +64,7 @@ class Course extends Model
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
-    
+
     /**
      * The students that belong to the course.
      */
@@ -72,5 +73,13 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'student_id')
             ->withPivot('status')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the schedule time slots for the course.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
     }
 }

@@ -34,7 +34,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $student->dni }}</td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Aún no tienes alumnos inscritos en tus cursos.</td></tr>
+                                    <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Aún no tienes alumnos inscriptos en tus cursos.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>

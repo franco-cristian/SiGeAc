@@ -24,16 +24,25 @@ class UserPolicy
 
         // Regla 3: Un Docente puede ver la foto si el targetUser es uno de sus alumnos.
         if ($currentUser->hasRole('Docente')) {
-            // Obtenemos los IDs de todos los alumnos del docente
             $studentIds = $currentUser->coursesAsTeacher()
-                ->with('students:id') // Carga solo el ID del estudiante para optimizar
+                ->with('students:id')
                 ->get()
                 ->pluck('students.*.id')
                 ->flatten()
                 ->unique();
             
-            // Verificamos si el ID del usuario objetivo está en la lista de alumnos
             return $studentIds->contains($targetUser->id);
+        }
+
+        // --- NUEVA REGLA 4: Un Alumno puede ver la foto si el targetUser es uno de sus docentes. ---
+        if ($currentUser->hasRole('Alumno')) {
+            // Obtenemos los IDs de todos los docentes del alumno
+            $teacherIds = $currentUser->coursesAsStudent()
+                ->pluck('teacher_id')
+                ->unique();
+
+            // Verificamos si el ID del usuario objetivo (el profesor) está en la lista.
+            return $teacherIds->contains($targetUser->id);
         }
 
         // Si ninguna de las reglas anteriores se cumple, se deniega el acceso.
