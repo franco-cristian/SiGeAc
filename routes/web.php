@@ -6,7 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfilePhotoController;
 use App\Livewire\Admin\Users\UserList;
 use App\Livewire\Student\CourseList;
-use App\Livewire\Teacher\StudentList;
+use App\Livewire\Teacher\Dashboard as TeacherDashboard;
 use App\Livewire\Admin\Settings\EnrollmentSettings;
 use App\Livewire\Student\Dashboard as StudentDashboard;
 
@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 // --- Rutas de Autenticación (Login, Registro, etc.) ---
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 // --- Rutas Protegidas (Requieren Login) ---
@@ -30,7 +30,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruta de distribución post-login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Ruta para servir fotos de perfil de forma segura
     Route::get('/users/{user}/photo', [UserProfilePhotoController::class, 'show'])->name('users.photo');
 
@@ -43,14 +43,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas del SuperAdmin
     Route::middleware(['role:SuperAdmin'])->name('admin.')->prefix('admin')->group(function () {
-        Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
         Route::get('/users', UserList::class)->name('users.index');
         Route::get('/settings/enrollment', EnrollmentSettings::class)->name('settings.enrollment');
     });
 
     // Rutas del Docente
-    Route::middleware(['role:Docente'])->name('docente.')->prefix('docente')->group(function () {
-        Route::get('/dashboard', StudentList::class)->name('dashboard');
+    Route::middleware(['auth', 'role:Docente'])->name('docente.')->prefix('docente')->group(function () {
+        Route::get('/dashboard', TeacherDashboard::class)->name('dashboard');
     });
 
     // Rutas del Alumno
@@ -58,5 +60,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', StudentDashboard::class)->name('dashboard');
         Route::get('/courses', CourseList::class)->name('courses.index');
     });
-
 });
