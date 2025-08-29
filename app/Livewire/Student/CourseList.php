@@ -3,6 +3,7 @@
 namespace App\Livewire\Student;
 
 use App\Models\Course;
+use App\Models\Setting;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -16,34 +17,90 @@ class CourseList extends Component
 
     public string $search = '';
     public string $subjectFilter = '';
+    public bool $isEnrollmentPeriodActive = false;
 
+    /**
+     * El método mount se ejecuta cuando el componente se inicializa.
+     * Aquí verificamos si el período de inscripción está activo.
+     */
+    public function mount()
+    {
+        $startDate = Setting::where('key', 'enrollment_start_date')->first()?->value;
+        $endDate = Setting::where('key', 'enrollment_end_date')->first()?->value;
+
+        if ($startDate && $endDate) {
+            $this->isEnrollmentPeriodActive = now()->between($startDate, $endDate);
+        }
+    }
+
+    /**
+     * Estos métodos se ejecutan cada vez que una propiedad con wire:model cambia.
+     * Resetean la paginación para evitar bugs al filtrar.
+     */
     public function updatingSearch() { $this->resetPage(); }
     public function updatingSubjectFilter() { $this->resetPage(); }
-
+    
+    /**
+     * Inscribe al alumno en un curso, aplicando todas las reglas de negocio.
+     */
     public function enroll(Course $course)
     {
         $user = Auth::user();
 
-        // 1. Verificar si ya está inscrito
-        if ($user->coursesAsStudent()->where('course_id', $course->id)->exists()) {
-            $this->dispatch('show-toast', ['message' => 'Ya estás inscrito en este curso.']);
+        // Regla 0: Verificar si el período de inscripción está activo
+        if (!$this->isEnrollmentPeriodActive) {
+            $this->dispatch('show-toast', ['message' => 'El período de inscripción no está activo.', 'type' => 'error']);
             return;
         }
 
-        // 2. Verificar cupos
-        $enrolledCount = $course->students()->where('status', 'cursando')->count();
+        // Regla 1: Contar las inscripciones activas del alumno.
+        $currentEnrollmentsCount = $user->coursesAsStudent()->where('enrollments.status', 'cursando')->count();
+        if ($currentEnrollmentsCount >= 6) {
+            $this->dispatch('show-toast', ['message' => 'Has alcanzado el límite de 6 inscripciones.', 'type' => 'error']);
+            return;
+        }
+
+        // Regla 2: Verificar si ya está inscrito en otra comisión de la misma materia.
+        $enrolledSubjectIds = $user->coursesAsStudent()
+                                  ->join('subjects', 'courses.subject_id', '=', 'subjects.id')
+                                  ->pluck('subjects.id');
+                                  
+        if ($enrolledSubjectIds->contains($course->subject_id)) {
+            $this->dispatch('show-toast', ['message' => 'Ya estás inscrito en otra comisión de esta materia.', 'type' => 'error']);
+            return;
+        }
+        
+        // Regla 3: Verificar cupos.
+        $enrolledCount = $course->students()->where('enrollments.status', 'cursando')->count();
         
         if ($enrolledCount >= $course->capacity) {
-            // No hay cupos, lo añadimos a la lista de espera
             $user->coursesAsStudent()->attach($course->id, ['status' => 'lista_de_espera']);
             $this->dispatch('show-toast', ['message' => 'Curso completo. Has sido añadido a la lista de espera.']);
         } else {
-            // Hay cupos, lo inscribimos
             $user->coursesAsStudent()->attach($course->id, ['status' => 'cursando']);
             $this->dispatch('show-toast', ['message' => "¡Inscripción exitosa a {$course->subject->name}!"]);
         }
     }
 
+    /**
+     * Da de baja al alumno de un curso.
+     */
+    public function withdraw(Course $course)
+    {
+        $user = Auth::user();
+
+        if (!$this->isEnrollmentPeriodActive) {
+            $this->dispatch('show-toast', ['message' => 'No puedes darte de baja fuera del período de inscripción.', 'type' => 'error']);
+            return;
+        }
+
+        $user->coursesAsStudent()->detach($course->id);
+        $this->dispatch('show-toast', ['message' => "Te has dado de baja de {$course->subject->name}."]);
+    }
+
+    /**
+     * Renderiza el componente con los datos necesarios para la vista.
+     */
     public function render()
     {
         $courses = Course::with(['subject', 'teacher'])
