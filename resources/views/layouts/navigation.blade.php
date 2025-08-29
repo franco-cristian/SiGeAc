@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                         Usuarios
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.courses.index')" :active="request()->routeIs('admin.courses.index')">
+                        Cursos
+                    </x-nav-link>
                     <x-nav-link :href="route('admin.settings.enrollment')" :active="request()->routeIs('admin.settings.enrollment')">
                         Inscripciones
                     </x-nav-link>
@@ -99,6 +102,9 @@
             @hasrole('SuperAdmin')
             <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                 Usuarios
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.courses.index')" :active="request()->routeIs('admin.courses.index')">
+                Cursos
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.settings.enrollment')" :active="request()->routeIs('admin.settings.enrollment')">
                 Inscripciones

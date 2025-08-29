@@ -31,8 +31,14 @@ class UserList extends Component
     /**
      * Resetea la paginación cada vez que se modifica un filtro.
      */
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatingRole() { $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingRole()
+    {
+        $this->resetPage();
+    }
 
     /**
      * Prepara y muestra el modal de confirmación para eliminar un usuario.
@@ -42,7 +48,7 @@ class UserList extends Component
         $this->userToDelete = User::findOrFail($userId);
         $this->confirmingUserDeletion = true;
     }
-    
+
     /**
      * Cierra el modal de eliminación y resetea el estado.
      */
@@ -65,9 +71,9 @@ class UserList extends Component
 
             $userName = $this->userToDelete->name;
             $this->userToDelete->delete();
-            
+
             $this->cancelDelete();
-            
+
             $this->dispatch('show-toast', ['message' => "Usuario '{$userName}' eliminado con éxito."]);
         }
     }
@@ -100,17 +106,32 @@ class UserList extends Component
             'editingState.role' => ['required', 'exists:roles,name'],
         ]);
 
-        // Actualiza los datos del usuario
+        // --- INICIO DE LA LÓGICA DE LIMPIEZA ---
+
+        // 1. Guardamos el rol anterior del usuario antes de hacer cualquier cambio.
+        $oldRole = $this->userToEdit->roles->first()?->name;
+        $newRole = $validatedData['editingState']['role'];
+
+        // 2. Comprobamos si el rol ha cambiado de Alumno a Docente.
+        if ($oldRole === 'Alumno' && $newRole === 'Docente') {
+            // Si es así, eliminamos todas sus inscripciones.
+            // detach() es el método de Eloquent para eliminar registros de una tabla pivote.
+            $this->userToEdit->coursesAsStudent()->detach();
+        }
+
+        // --- FIN DE LA LÓGICA DE LIMPIEZA ---
+
+        // 3. Actualizamos los datos del usuario.
         $this->userToEdit->update([
             'name' => $validatedData['editingState']['name'],
             'email' => $validatedData['editingState']['email'],
             'dni' => $validatedData['editingState']['dni'],
         ]);
 
-        // Sincroniza el rol del usuario
-        $this->userToEdit->syncRoles($validatedData['editingState']['role']);
+        // 4. Sincronizamos el nuevo rol.
+        $this->userToEdit->syncRoles($newRole);
 
-        // Cierra el modal, resetea el estado y envía una notificación de éxito
+        // 5. Cerramos el modal y notificamos.
         $this->cancelEdit();
         $this->dispatch('show-toast', ['message' => 'Usuario actualizado con éxito.']);
     }
@@ -135,7 +156,7 @@ class UserList extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%');
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->role, function ($query) {

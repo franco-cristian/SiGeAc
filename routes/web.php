@@ -9,6 +9,7 @@ use App\Livewire\Student\CourseList;
 use App\Livewire\Teacher\Dashboard as TeacherDashboard;
 use App\Livewire\Admin\Settings\EnrollmentSettings;
 use App\Livewire\Student\Dashboard as StudentDashboard;
+use App\Livewire\Admin\Courses\CourseManager;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,12 +43,11 @@ Route::middleware(['auth'])->group(function () {
     // --- Rutas Específicas por Rol ---
 
     // Rutas del SuperAdmin
-    Route::middleware(['role:SuperAdmin'])->name('admin.')->prefix('admin')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+    Route::middleware(['auth', 'role:SuperAdmin'])->name('admin.')->prefix('admin')->group(function () {
+        Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
         Route::get('/users', UserList::class)->name('users.index');
         Route::get('/settings/enrollment', EnrollmentSettings::class)->name('settings.enrollment');
+        Route::get('/courses', CourseManager::class)->name('courses.index');
     });
 
     // Rutas del Docente
