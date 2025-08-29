@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserProfilePhotoController extends Controller
 {
+    use AuthorizesRequests;
+
     public function show(User $user)
     {
-        // Policy para verificar permisos
-        // el usuario logueado debe tener permiso para ver esta foto.
-        
-        if (!Storage::disk('local')->exists($user->photo_path)) {
+        $this->authorize('viewPhoto', $user);
+
+        if (!$user->photo_path || !Storage::disk('local')->exists($user->photo_path)) {
             abort(404);
         }
 
