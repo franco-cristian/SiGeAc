@@ -1,5 +1,5 @@
 <div>
-    <!-- Header / Título de la Página -->
+    <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h2 class="font-semibold text-xl text-secondary dark:text-dark-secondary leading-tight">
@@ -13,25 +13,24 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-dark-neutral-card overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 lg:p-8 space-y-6">
-                    
+
                     <!-- Barra de Filtros -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input 
-                            wire:model.live.debounce.300ms="search" 
-                            type="text" 
-                            placeholder="Buscar por nombre o email..."
-                            class="md:col-span-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm w-full"
-                        >
+                        <input
+                            wire:model.live.debounce.300ms="search"
+                            type="text"
+                            placeholder="Buscar por nombre, email, DNI o teléfono..."
+                            class="md:col-span-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm w-full">
                         <select wire:model.live="role" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm w-full">
                             <option value="">Todos los Roles</option>
                             @foreach ($roles as $roleName)
-                                <option value="{{ $roleName }}">{{ $roleName }}</option>
+                            <option value="{{ $roleName }}">{{ $roleName }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <!-- Contenedor de la Lista -->
-                    <div>
+                    <div class="overflow-x-auto">
                         <!-- Tabla para Escritorio -->
                         <div class="hidden md:block">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -45,27 +44,33 @@
                                 </thead>
                                 <tbody class="bg-white dark:bg-dark-neutral-card divide-y divide-gray-200 dark:divide-gray-700">
                                     @forelse ($users as $user)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $user->name }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                @foreach ($user->roles as $role)
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{{ $role->name }}</span>
-                                                @endforeach
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                                <button wire:click="edit({{ $user->id }})" class="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                                    <x-lucide-file-pen-line class="h-5 w-5"/>
-                                                </button>
-                                                @if ($user->id !== auth()->id() && !$user->hasRole('SuperAdmin'))
-                                                <button wire:click="confirmDelete({{ $user->id }})" class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                                                    <x-lucide-trash-2 class="h-5 w-5"/>
-                                                </button>
-                                                @endif
-                                            </td>
-                                        </tr>
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            <button wire:click="viewProfile({{ $user->id }})" class="hover:underline text-primary dark:text-dark-primary">
+                                                {{ $user->name }}
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            @foreach ($user->roles as $role)
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{{ $role->name }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button wire:click="edit({{ $user->id }})" class="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                <x-lucide-file-pen-line class="h-5 w-5" />
+                                            </button>
+                                            @if ($user->id !== auth()->id() && !$user->hasRole('SuperAdmin'))
+                                            <button wire:click="confirmDelete({{ $user->id }})" class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                                <x-lucide-trash-2 class="h-5 w-5" />
+                                            </button>
+                                            @endif
+                                        </td>
+                                    </tr>
                                     @empty
-                                        <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</td></tr>
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -74,35 +79,37 @@
                         <!-- Tarjetas para Móvil -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
                             @forelse ($users as $user)
-                                <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg shadow">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</p>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                                        </div>
-                                        <div class="mt-1">
-                                            @foreach ($user->roles as $role)
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{{ $role->name }}</span>
-                                            @endforeach
-                                        </div>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg shadow">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <button wire:click="viewProfile({{ $user->id }})" class="font-semibold text-left text-secondary dark:text-dark-secondary hover:underline">
+                                            {{ $user->name }}
+                                        </button>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                                     </div>
-                                    <div class="mt-4 flex justify-end space-x-2">
-                                        <button wire:click="edit({{ $user->id }})" class="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                            <x-lucide-file-pen-line class="h-5 w-5"/>
-                                        </button>
-                                        @if ($user->id !== auth()->id() && !$user->hasRole('SuperAdmin'))
-                                        <button wire:click="confirmDelete({{ $user->id }})" class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                                            <x-lucide-trash-2 class="h-5 w-5"/>
-                                        </button>
-                                        @endif
+                                    <div class="mt-1">
+                                        @foreach ($user->roles as $role)
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">{{ $role->name }}</span>
+                                        @endforeach
                                     </div>
                                 </div>
+                                <div class="mt-4 flex justify-end space-x-2">
+                                    <button wire:click="edit({{ $user->id }})" class="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                        <x-lucide-file-pen-line class="h-5 w-5" />
+                                    </button>
+                                    @if ($user->id !== auth()->id() && !$user->hasRole('SuperAdmin'))
+                                    <button wire:click="confirmDelete({{ $user->id }})" class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                        <x-lucide-trash-2 class="h-5 w-5" />
+                                    </button>
+                                    @endif
+                                </div>
+                            </div>
                             @empty
-                                <p class="text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</p>
+                            <p class="text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</p>
                             @endforelse
                         </div>
                     </div>
-                    
+
                     <!-- Paginación -->
                     <div class="mt-6">
                         {{ $users->links() }}
@@ -113,14 +120,65 @@
         </div>
     </div>
 
+    <!-- Modal de Ver Perfil de Usuario -->
+    @if($userToView)
+    <div class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg">
+            {{-- Reutilizamos la lógica del widget de perfil del dashboard del alumno --}}
+            <div class="flex items-center">
+                <img class="w-24 h-24 rounded-full object-cover"
+                    src="{{ $userToView->photo_path ? route('users.photo', $userToView) : 'https://ui-avatars.com/api/?name=' . urlencode($userToView->name) . '&background=random' }}"
+                    alt="{{ $userToView->name }}">
+                <div class="ml-4">
+                    <h3 class="text-xl font-bold text-secondary dark:text-dark-secondary">{{ $userToView->name }}</h3>
+                    <p class="text-sm text-neutral-text dark:text-dark-neutral-text">{{ $userToView->email }}</p>
+                </div>
+            </div>
+            <div class="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4 space-y-4">
+                <div class="flex items-center text-neutral-text dark:text-dark-neutral-text">
+                    <x-lucide-hash class="w-5 h-5 mr-3 text-gray-400" />
+                    <span><strong>DNI:</strong> {{ $userToView->dni }}</span>
+                </div>
+                @if($userToView->phone)
+                <a href="https://wa.me/549{{ $userToView->phone }}" target="_blank" class="flex items-center text-neutral-text dark:text-dark-neutral-text hover:text-primary dark:hover:text-dark-primary transition">
+                    <x-lucide-phone class="w-5 h-5 mr-3 text-gray-400" />
+                    <span>{{ $userToView->phone }}</span>
+                </a>
+                @endif
+                @if($userToView->github_url)
+                <a href="{{ $userToView->github_url }}" target="_blank" class="flex items-center text-neutral-text dark:text-dark-neutral-text hover:text-primary dark:hover:text-dark-primary transition">
+                    <x-lucide-github class="w-5 h-5 mr-3 text-gray-400" />
+                    <span>Perfil de GitHub</span>
+                </a>
+                @endif
+                @if($userToView->linkedin_url)
+                <a href="{{ $userToView->linkedin_url }}" target="_blank" class="flex items-center text-neutral-text dark:text-dark-neutral-text hover:text-primary dark:hover:text-dark-primary transition">
+                    <x-lucide-linkedin class="w-5 h-5 mr-3 text-gray-400" />
+                    <span>Perfil de LinkedIn</span>
+                </a>
+                @endif
+                @if($userToView->professional_url)
+                <a href="{{ $userToView->professional_url }}" target="_blank" class="flex items-center text-neutral-text dark:text-dark-neutral-text hover:text-primary dark:hover:text-dark-primary transition">
+                    <x-lucide-globe class="w-5 h-5 mr-3 text-gray-400" />
+                    <span>Sitio Web / Portafolio</span>
+                </a>
+                @endif
+            </div>
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button wire:click="closeModal">Cerrar</x-secondary-button>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Modal de Confirmación de Eliminación -->
     @if ($confirmingUserDeletion)
     <div class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
             <h3 class="text-xl font-bold text-secondary dark:text-dark-secondary">Confirmar Eliminación</h3>
             <p class="mt-2 text-neutral-text dark:text-dark-neutral-text">
-                ¿Estás seguro de que quieres eliminar al usuario 
-                <strong class="font-bold text-secondary dark:text-dark-secondary">{{ $userToDelete?->name }}</strong>? 
+                ¿Estás seguro de que quieres eliminar al usuario
+                <strong class="font-bold text-secondary dark:text-dark-secondary">{{ $userToDelete?->name }}</strong>?
                 Esta acción no se puede deshacer.
             </p>
             <div class="mt-6 flex justify-end space-x-4">
@@ -158,7 +216,7 @@
                     <label for="editingRole" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rol</label>
                     <select wire:model="editingState.role" id="editingRole" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-primary dark:focus:border-dark-primary focus:ring-primary dark:focus:ring-dark-primary rounded-md shadow-sm">
                         @foreach ($roles as $roleName)
-                            <option value="{{ $roleName }}">{{ $roleName }}</option>
+                        <option value="{{ $roleName }}">{{ $roleName }}</option>
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('editingState.role')" class="mt-1" />

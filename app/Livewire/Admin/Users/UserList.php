@@ -28,6 +28,9 @@ class UserList extends Component
     public ?User $userToEdit = null;
     public array $editingState = []; // Usamos un array para el estado del formulario de edición
 
+    // --- PROPIEDAD PARA EL MODAL DE PERFIL ---
+    public ?User $userToView = null;
+
     /**
      * Resetea la paginación cada vez que se modifica un filtro.
      */
@@ -147,6 +150,28 @@ class UserList extends Component
         $this->resetErrorBag(); // Limpia los mensajes de error de validación previos
     }
 
+    // --- MÉTODOS PARA VER PERFIL ---
+    public function viewProfile(User $user)
+    {
+        $this->userToView = $user;
+    }
+
+    public function closeModal()
+    {
+        // Resetea el estado de todos los posibles modales
+        $this->confirmingUserDeletion = false;
+        $this->userToDelete = null;
+
+        $this->isEditing = false;
+        $this->userToEdit = null;
+        $this->editingState = [];
+
+        $this->userToView = null;
+
+        // Limpia cualquier error de validación que haya quedado de un formulario
+        $this->resetErrorBag();
+    }
+
     /**
      * Renderiza el componente con los datos necesarios para la vista.
      */
@@ -156,7 +181,9 @@ class UserList extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                      ->orWhere('email', 'like', '%' . $this->search . '%')
+                      ->orWhere('dni', 'like', '%' . $this->search . '%')
+                      ->orWhere('phone', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->role, function ($query) {
