@@ -76,6 +76,7 @@
                             </div>
                         </label>
                         <span class="mt-2 text-sm text-neutral-text dark:text-dark-secondary">Foto de Perfil (Obligatoria)</span>
+                        <span class="mt-2 text-xs text-neutral-text dark:text-dark-secondary">JPG, PNG, WEBP. Máx 2MB.</span>
                         <span x-text="photoError" class="mt-2 text-sm text-red-600"></span>
                         <x-input-error :messages="$errors->get('photo')" class="mt-2 text-center" />
                     </div>

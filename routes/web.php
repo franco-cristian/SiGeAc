@@ -11,6 +11,7 @@ use App\Livewire\Admin\Settings\EnrollmentSettings;
 use App\Livewire\Student\Dashboard as StudentDashboard;
 use App\Livewire\Admin\Courses\CourseManager;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     // Rutas del Docente
     Route::middleware(['auth', 'role:Docente'])->name('docente.')->prefix('docente')->group(function () {
         Route::get('/dashboard', TeacherDashboard::class)->name('dashboard');
+        Route::post('/courses/{course}/report', [ReportController::class, 'generateStudentListPdf'])->name('courses.report');
     });
 
     // Rutas del Alumno

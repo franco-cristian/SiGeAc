@@ -21,7 +21,6 @@
         </script>
         
         <!-- Estilos y Scripts Principales -->
-        {{-- El atributo 'data-navigate-once' es CRUCIAL. Le dice a Livewire que no toque estos scripts al navegar --}}
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
@@ -37,25 +36,49 @@
         </div>
 
         <footer class="bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                <span>&copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.</span>
-                <span class="mx-2">|</span>
-                <span>¿Problemas? Contacta a <a href="mailto:soporte.academico@utn.com" class="underline hover:text-gray-900 dark:hover:text-gray-100">soporte.academico@utn.com</a></span>
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center sm:text-left">
+                <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                    {{-- Lado Izquierdo del Footer --}}
+                    <div class="flex items-center space-x-4">
+                        <span>&copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.</span>
+                        <span class="hidden sm:inline">|</span>
+                        <a href="mailto:soporte.academico@tutamail.com" class="underline hover:text-gray-900 dark:hover:text-gray-100">Contacto de Soporte</a>
+                    </div>
+                    {{-- Lado Derecho del Footer --}}
+                    <div class="mt-2 sm:mt-0">
+                        <span>Desarrollado por <a href="https://franco-cristian.github.io/" target="_blank" class="font-semibold underline hover:text-primary dark:hover:text-dark-primary">Cristian Franco</a></span>
+                    </div>
+                </div>
             </div>
         </footer>
-        
+
         @livewireScripts
         
         <!-- Componente Global de Notificación (Toast) -->
         <div 
-            x-data="{ show: false, message: '' }"
-            x-on:show-toast.window="message = $event.detail.message; show = true; setTimeout(() => show = false, 3000)"
+            x-data="{ show: false, message: '', type: 'success' }"
+            x-on:show-toast.window="
+                message = $event.detail.message;
+                type = $event.detail.type || 'success';
+                show = true;
+                setTimeout(() => show = false, 3000)
+            "
             x-show="show"
-            x-transition
-            class="fixed top-5 right-5 z-50 p-4 rounded-md shadow-lg text-white bg-accent-success"
+            x-transition:enter="transform ease-out duration-300 transition"
+            x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+            x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed top-5 right-5 z-50 p-4 rounded-md shadow-lg text-white"
+            :class="{
+                'bg-accent-success': type === 'success',
+                'bg-red-500': type === 'error'
+            }"
             style="display: none;"
         >
             <div x-text="message"></div>
         </div>
+
     </body>
 </html>
