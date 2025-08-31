@@ -76,8 +76,12 @@ class CourseManager extends Component
         $this->showCourseModal = true;
     }
 
+    /**
+     * Valida y guarda (crea o actualiza) un curso y sus horarios.
+     */
     public function saveCourse()
     {
+        // --- REGLAS DE VALIDACIÓN CORREGIDAS ---
         $validated = $this->validate([
             'subject_id' => 'required|exists:subjects,id',
             'teacher_id' => 'required|exists:users,id',
@@ -88,7 +92,25 @@ class CourseManager extends Component
             'schedules' => 'present|array|min:1',
             'schedules.*.day_of_week' => 'required|in:lunes,martes,miercoles,jueves,viernes,sabado',
             'schedules.*.start_time' => 'required|date_format:H:i',
-            'schedules.*.end_time' => 'required|date_format:H:i|after:schedules.*.start_time',
+            // La regla 'after' se aplica de forma diferente para cada elemento del array
+            'schedules.*.end_time' => [
+                'required',
+                'date_format:H:i',
+                function ($attribute, $value, $fail) {
+                    // Extraemos el índice del array, ej: "schedules.0.end_time" -> 0
+                    $index = explode('.', $attribute)[1];
+                    $startTime = $this->schedules[$index]['start_time'];
+                    if (strtotime($value) <= strtotime($startTime)) {
+                        $fail('La hora de fin debe ser posterior a la hora de inicio.');
+                    }
+                },
+            ],
+        ], [
+            // Mensajes de error personalizados para mayor claridad
+            'schedules.*.start_time.required' => 'La hora de inicio es obligatoria.',
+            'schedules.*.end_time.required' => 'La hora de fin es obligatoria.',
+            'schedules.*.start_time.date_format' => 'El formato de hora no es válido.',
+            'schedules.*.end_time.date_format' => 'El formato de hora no es válido.',
         ]);
 
         $courseData = collect($validated)->except('schedules')->toArray();

@@ -12,6 +12,7 @@ use App\Livewire\Student\Dashboard as StudentDashboard;
 use App\Livewire\Admin\Courses\CourseManager;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Http\Controllers\ReportController;
+use App\Livewire\Admin\Courses\CourseEnrollments;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users', UserList::class)->name('users.index');
         Route::get('/settings/enrollment', EnrollmentSettings::class)->name('settings.enrollment');
         Route::get('/courses', CourseManager::class)->name('courses.index');
+        Route::get('/courses/{course}/enrollments', CourseEnrollments::class)->name('courses.enrollments');
     });
 
     // Rutas del Docente
