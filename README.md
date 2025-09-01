@@ -1,61 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SiGeAc - Sistema de Gestión Académica
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Captura de Pantalla del Login de SiGeAc](https://i.imgur.com/Cz9janO.png)
 
-## About Laravel
+**SiGeAc** es una aplicación web moderna y robusta, diseñada para la gestión académica en instituciones educativas. Construida con el stack TALL (Tailwind, Alpine, Livewire, Laravel), la plataforma ofrece una experiencia de usuario fluida, segura y completamente responsiva, con un enfoque en la usabilidad y un diseño "dark-mode first".
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este proyecto fue desarrollado para la materia **Programación IV** de la carrera Tecnicatura Universitaria en Programación, en la **Universidad Tecnológica Nacional (UTN) - Facultad Regional Resistencia, Sede Formosa.**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Características Principales
 
-## Learning Laravel
+### Para Administradores (`SuperAdmin`)
+- **Dashboard con Estadísticas Clave:** Visualización en tiempo real del total de alumnos, docentes y cursos.
+- **Gestión Completa de Usuarios:** CRUD completo para crear, ver, editar y eliminar usuarios.
+- **Asignación de Roles:** Capacidad para promover o degradar usuarios entre los roles de Alumno y Docente.
+- **Gestión Dinámica de Cursos:** CRUD completo para crear y gestionar la oferta académica, incluyendo materias, comisiones y múltiples bloques horarios.
+- **Gestión de Inscripciones:** Panel para definir períodos de inscripción y gestionar listas de espera.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Para Docentes (`Docente`)
+- **Panel Contextual:** Vista de alumnos filtrada por curso y comisión.
+- **Herramientas de Gestión:** Búsqueda avanzada de alumnos (nombre, email, DNI, teléfono), paginación personalizable y toggle para mostrar/ocultar fotos.
+- **Acciones Rápidas:** Ver el perfil detallado de un alumno o desinscribirlo de un curso con confirmación.
+- **Reportes en PDF:** Generación de listas de alumnos personalizadas con selección de columnas y orientación de página.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Para Alumnos (`Alumno`)
+- **Registro Completo y Seguro:** Formulario de registro con validación robusta y subida de foto de perfil obligatoria.
+- **Dashboard Personal:** Widget de perfil con información de contacto y un horario semanal interactivo.
+- **Inscripción a Cursos:** Interfaz para explorar la oferta académica, filtrarla y inscribirse en cursos, respetando los cupos y períodos de inscripción.
+- **Gestión de Inscripciones:** Posibilidad de darse de baja de un curso durante el período habilitado.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Tecnologías Utilizadas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+![PHP 8.3+](https://img.shields.io/badge/PHP-8.3%2B-777BB4?style=for-the-badge&logo=php)
+![Laravel 12](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel)
+![Livewire 3](https://img.shields.io/badge/Livewire-3-4d51b3?style=for-the-badge&logo=livewire)
+![Alpine.js 3](https://img.shields.io/badge/Alpine.js-3-8BC0D0?style=for-the-badge&logo=alpine.js)
+![Tailwind CSS 3](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css)
+![MySQL 8.4](https://img.shields.io/badge/MySQL-8.4-4479A1?style=for-the-badge&logo=mysql)
+![Vite 7](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite)
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🔧 Instalación en un Entorno Local
 
-## Contributing
+Para clonar y ejecutar este proyecto sigue estos pasos.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Prerrequisitos
+- Git
+- PHP 8.3+
+- Composer
+- Node.js & NPM
+- Un servidor MySQL
 
-## Code of Conduct
+### Pasos de Instalación
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/franco-cristian/SiGeAc.git
+    cd SiGeAc
+    ```
 
-## Security Vulnerabilities
+2.  **Instalar dependencias:**
+    ```bash
+    composer install
+    npm install
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3.  **Configurar el entorno:**
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+    A continuación, abre el archivo `.env` y configura tus credenciales de base de datos (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
 
-## License
+4.  **Preparar la base de datos:**
+    Este comando creará todas las tablas y las llenará con datos de prueba (roles, admin, docentes, materias y cursos).
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5.  **Crear el enlace simbólico:**
+    Necesario para que las fotos de perfil sean visibles.
+    ```bash
+    php artisan storage:link
+    ```
+
+6.  **Compilar los assets y ejecutar:**
+    ```bash
+    # En una terminal
+    npm run dev
+
+    # En otra terminal
+    php artisan serve
+    ```
+
+7.  **¡Listo!** Accede a la aplicación en `http://127.0.0.1:8000`.
+
+### Credenciales de Acceso de Prueba
+-   **SuperAdmin:** `admin@sga.com` / `password`
+-   **Docente:** `crozy.german@sga.com` / `password`
+-   **Alumno:** Regístrate como un nuevo usuario o usa uno de los creados por los seeders.
+
+---
+
+## 👨‍💻 Autor
+
+-   **Cristian Franco**
+-   **Portfolio:** [franco-cristian.github.io](https://franco-cristian.github.io/)
+-   **GitHub:** [@franco-cristian](https://github.com/franco-cristian)
+-   **LinkedIn:** [linkedin.com/in/cristian-ricardo-franco](https://www.linkedin.com/in/cristian-ricardo-franco/)
